@@ -1,9 +1,13 @@
 # CircleCI configuration file
 version: 2.1
 
+workflows:
+  build-workflow:
+    jobs:
+      - runner
 jobs:
-  build:
-    docker:
-    - image: ubuntu:latest
+  runner:
+    machine: true
+    resource_class: ketangangal/machines
     steps:
-    - run: echo "hello world"
+      - run: echo "Hi I'm on Runners!"
