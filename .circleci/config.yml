@@ -10,4 +10,6 @@ jobs:
     machine: true
     resource_class: ketangangal/machines
     steps:
-      - run: echo "Hi I'm on Runners!"
+      - run: 
+          name: Echo test
+          command: echo "Hi I'm on Runners!"
