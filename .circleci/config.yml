@@ -1,1 +1,9 @@
- # Test
+# CircleCI configuration file
+version: 2.1
+
+jobs:
+  build:
+    docker:
+    - image: hello-world
+    steps:
+    - run: docker run hello-world
