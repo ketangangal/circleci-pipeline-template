@@ -4,6 +4,6 @@ version: 2.1
 jobs:
   build:
     docker:
-    - image: hello-world
+    - image: ubuntu:latest
     steps:
-    - run: docker run hello-world
+    - run: echo "hello world"
