@@ -1,6 +1,9 @@
 # CircleCI configuration file
 version: 2.1
 
+orbs:
+  gcp-cli: circleci/gcp-cli@2.4.1
+
 jobs:
   continuous-integration:
     docker:
