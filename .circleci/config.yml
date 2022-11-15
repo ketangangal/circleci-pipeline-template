@@ -1,7 +1,7 @@
 version: 2.1
 
-orbs:
-  gcp-cli: circleci/gcp-cli@2.4.1
+# orbs:
+#   gcp-cli: circleci/gcp-cli@2.4.1
 
 jobs:
   continuous-integration:
@@ -25,6 +25,10 @@ jobs:
     resource_class: medium
     steps:
       - checkout
+      - run:
+            name: "echo an env var that is part of our project"
+            command: |
+              echo $Test # this env var must be set within the project
 
 
   continuous-deployment:
@@ -46,8 +50,8 @@ workflows:
           requires:
             - continuous-integration
 
-      - gcp-cli/install_and_initialize_cli:
-          gcloud-service-key: $GCLOUD_SERVICE_KEY
+      # - gcp-cli/install_and_initialize_cli:
+      #     gcloud-service-key: $GCLOUD_SERVICE_KEY
 
       - Wait:
           type: approval
