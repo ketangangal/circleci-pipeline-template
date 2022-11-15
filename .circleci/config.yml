@@ -44,7 +44,9 @@ jobs:
           name: Docker Build and tag
           command: docker build -t $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
       
-
+      - run:
+          name: Docker Build and tag
+          command: docker push $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
 
 
   continuous-deployment:
