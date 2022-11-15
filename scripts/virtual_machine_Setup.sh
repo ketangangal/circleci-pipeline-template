@@ -8,7 +8,8 @@ sudo apt update
 apt-cache policy docker-ce
 sudo apt install docker-ce -y
 sudo systemctl status docker
-
+sudo usermod -aG docker cloud
+newgrp docker
 
 # Setup Google Cloud
 curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-409.0.0-linux-x86_64.tar.gz
