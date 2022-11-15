@@ -5,6 +5,7 @@ jobs:
   continuous-integration:
     docker:
       - image: cimg/base:stable
+    resource_class: medium
     steps:
       - checkout
 
@@ -19,6 +20,7 @@ jobs:
   continuous-delivery:
     docker:
       - image: cimg/base:stable
+    resource_class: medium
 
     environment:
         REPOSITORY: finance-complaint
@@ -60,6 +62,20 @@ workflows:
   build-workflow:
     jobs:
       - continuous-integration
-      - continuous-delivery
+
+      - continuous-delivery:
+          requires:
+            - continuous-integration
+
+      - Wait:
+          type: approval
+          requires:
+          - continuous-delivery
+
+      - continuous-deployment:
+          requires:
+            - continuous-integration
+            - continuous-delivery
+      
       # - continuous-deployment
       # - post-actions
