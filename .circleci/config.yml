@@ -36,6 +36,10 @@ jobs:
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
             gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
 
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+
       - run:
           name: Docker Build and tag
           command: docker build -t $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
@@ -62,9 +66,6 @@ workflows:
           requires:
             - continuous-integration
 
-      # - gcp-cli/install_and_initialize_cli:
-      #     gcloud-service-key: $GCLOUD_SERVICE_KEY
-
       - Wait:
           type: approval
           requires:
@@ -74,6 +75,3 @@ workflows:
           requires:
             - continuous-integration
             - continuous-delivery
-      
-      # - continuous-deployment
-      # - post-actions
