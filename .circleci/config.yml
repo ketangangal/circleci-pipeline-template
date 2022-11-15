@@ -1,6 +1,10 @@
 # CircleCI configuration file
 version: 2.1
 
+orbs:
+  gcp-gcr: circleci/gcp-gcr@0.15.0
+
+
 jobs:
   continuous-integration:
     docker:
@@ -32,13 +36,24 @@ jobs:
     steps:
       - checkout
 
-      - setup_remote_docker:
-          version: 20.10.14
-          docker_layer_caching: true
+      - gcp-gcr/build-and-push-image:
+          context: .
+          image: $IMAGE_NAME:$IMAGE_TAG
+          registry-url: $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY
+          setup-remote-docker: true
+          use-docker-layer-caching: true
 
-      - run: 
-          name: Build Docker 
-          command: docker build -t $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
+      # - setup_remote_docker: 
+      #     version: 20.10.14
+      #     docker_layer_caching: true
+
+      # - run: 
+      #     name: Build Docker 
+      #     command: docker build -t $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
+
+      # - run:
+      #     name: Build Docker 
+      #     command: docker build -t $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
 
 
   continuous-deployment:
@@ -48,7 +63,7 @@ jobs:
     steps:
       - run: 
           name: Echo test
-          command: "Linting repository"
+          command: echo "Linting repository"
 
   # post-actions:
   #   machine: true
