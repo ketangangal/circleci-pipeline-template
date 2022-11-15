@@ -1,8 +1,5 @@
 version: 2.1
 
-# orbs:
-#   gcp-cli: circleci/gcp-cli@2.4.1
-
 jobs:
   continuous-integration:
     docker:
@@ -54,14 +51,34 @@ jobs:
 
 
   continuous-deployment:
-    docker:
-      - image: cimg/base:stable
-    resource_class: medium
+    machine: true
+    resource_class: ketangangal/self-hosted
     steps:
-      - run: 
-          name: Echo test
-          command: echo "Linting repository"
+      - run:
+          name: google cloud authentication
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
 
+      - run: 
+          name: configure docker login
+          command: gcloud auth configure-docker $GOOGLE_COMPUTE_ZONE-docker.pkg.dev
+
+      - run:
+          name: pull image from private repository
+          command: docker pull $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG 
+
+      - run:
+          name: pull image from private repository
+          command: |
+            docker ps -q --filter "name=$GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG " | grep -q . \
+              && docker stop $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG \
+               && docker rm -fv sensor || true
+
+      - run:
+          name: pull image from private repository
+          command: docker run -d -p 80:8080 ${ECR_REPOSITORY}:${IMAGE_TAG}
   
 workflows:
   CICD:
@@ -72,12 +89,13 @@ workflows:
           requires:
             - continuous-integration
 
-      - Wait:
+      - sanity-check:
           type: approval
           requires:
           - continuous-delivery
 
       - continuous-deployment:
           requires:
+            - sanity-check
             - continuous-integration
             - continuous-delivery
