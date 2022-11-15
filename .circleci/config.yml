@@ -34,28 +34,9 @@ jobs:
 
     steps:
       - checkout
-      - gcp-cli/install_and_initialize_cli:
-          gcloud-service-key: $GCLOUD_SERVICE_KEY
+      - gcp-cli
+      
 
-
-      # - gcp-gcr/continuous-delivery:
-      #     context: .
-      #     image: $IMAGE_NAME:$IMAGE_TAG
-      #     registry-url: $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY
-      #     setup-remote-docker: true
-      #     use-docker-layer-caching: true
-
-      # - setup_remote_docker: 
-      #     version: 20.10.14
-      #     docker_layer_caching: true
-
-      # - run: 
-      #     name: Build Docker 
-      #     command: docker build -t $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
-
-      # - run:
-      #     name: Build Docker 
-      #     command: docker build -t $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
 
 
   continuous-deployment:
