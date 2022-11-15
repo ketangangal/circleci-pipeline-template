@@ -43,6 +43,10 @@ jobs:
       - run:
           name: build and tag
           command: docker build -t $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
+
+      - run: 
+          name: configure docker login
+          command: gcloud auth configure-docker $GOOGLE_COMPUTE_ZONE-docker.pkg.dev
       
       - run:
           name: push to private repository
