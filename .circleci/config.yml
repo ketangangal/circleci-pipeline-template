@@ -34,7 +34,8 @@ jobs:
 
     steps:
       - checkout
-      - gcp-cli
+      - gcp-cli/install_and_initialize_cli:
+          gcloud-service-key: ${GCLOUD_SERVICE_KEY}
 
 
 
