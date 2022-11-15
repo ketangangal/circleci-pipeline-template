@@ -26,12 +26,6 @@ jobs:
     steps:
       - checkout
 
-      - gcp-cli/install_and_initialize_cli:
-          context: myContext
-          gcloud-service-key: GCLOUD_SERVICE_KEY
-
-
-
 
   continuous-deployment:
     docker:
@@ -42,14 +36,6 @@ jobs:
           name: Echo test
           command: echo "Linting repository"
 
-  # post-actions:
-  #   machine: true
-  #   resource_class: ketangangal/machines
-  #   steps:
-  #     - run: 
-  #         name: Echo test
-  #         command: echo "Hi I'm on Runners!"
-
   
 workflows:
   CICD:
@@ -59,6 +45,10 @@ workflows:
       - continuous-delivery:
           requires:
             - continuous-integration
+
+      - gcp-cli/install_and_initialize_cli:
+          gcloud-service-key: GCLOUD_SERVICE_KEY 
+          google-compute-region: asia-south-1 
 
       - Wait:
           type: approval
