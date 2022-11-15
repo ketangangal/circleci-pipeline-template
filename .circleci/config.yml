@@ -21,14 +21,26 @@ jobs:
   
   continuous-delivery:
     docker:
-      - image: cimg/base:stable
+      - image: google/cloud-sdk
     resource_class: medium
+    environment:
+      REPOSITORY: finance-complaint
+      IMAGE_NAME: finance-complaint
+      IMAGE_TAG: latest
     steps:
       - checkout
       - run:
-            name: "echo an env var that is part of our project"
-            command: |
-              echo $Test # this env var must be set within the project
+          name: Google Cloud Authentication
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+
+      - run:
+          name: Docker Build and tag
+          command: docker build -t $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
+      
+
 
 
   continuous-deployment:
