@@ -1,15 +1,65 @@
 # CircleCI configuration file
 version: 2.1
 
+jobs:
+  continuous-integration:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+
+      - run: 
+          name: Lint code
+          command: echo "Linting repository"
+
+      - run: 
+          name: Run unit tests
+          command: echo "Running unit tests"
+
+  continuous-delivery:
+    docker:
+      - image: cimg/base:stable
+
+    environment:
+        REPOSITORY: finance-complaint
+        IMAGE_NAME: finance-complaint
+        IMAGE_TAG: latest
+        PROJECT_ID: our-velocity-363109
+        GAR_LOCATION: asia-south1
+
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+
+      - run: 
+          name: Build Docker 
+          command: docker build -t $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
+
+
+  # continuous-deployment:
+  #   machine: true
+  #   resource_class: ketangangal/machines
+  #   steps:
+  #     - run: 
+  #         name: Echo test
+  #         command: "Linting repository"
+
+  # post-actions:
+  #   machine: true
+  #   resource_class: ketangangal/machines
+  #   steps:
+  #     - run: 
+  #         name: Echo test
+  #         command: echo "Hi I'm on Runners!"
+
+  
 workflows:
   build-workflow:
     jobs:
-      - runner
-jobs:
-  runner:
-    machine: true
-    resource_class: ketangangal/machines
-    steps:
-      - run: 
-          name: Echo test
-          command: echo "Hi I'm on Runners!"
+      - continuous-integration
+      - continuous-delivery
+      # - continuous-deployment
+      # - post-actions
