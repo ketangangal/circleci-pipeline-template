@@ -41,13 +41,14 @@ jobs:
           command: docker build -t $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
 
 
-  # continuous-deployment:
-  #   machine: true
-  #   resource_class: ketangangal/machines
-  #   steps:
-  #     - run: 
-  #         name: Echo test
-  #         command: "Linting repository"
+  continuous-deployment:
+    docker:
+      - image: cimg/base:stable
+    resource_class: medium
+    steps:
+      - run: 
+          name: Echo test
+          command: "Linting repository"
 
   # post-actions:
   #   machine: true
