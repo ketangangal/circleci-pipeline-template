@@ -22,26 +22,39 @@ jobs:
           command: echo "Running unit tests"
 
   continuous-delivery:
-    docker:
-      - image: cimg/base:stable
-    resource_class: medium
+    executor: gcp-gcr/default
 
     environment:
         REPOSITORY: finance-complaint
         IMAGE_NAME: finance-complaint
         IMAGE_TAG: latest
-        PROJECT_ID: our-velocity-363109
+        PROJECT_ID: industry-ready-finance
         GAR_LOCATION: asia-south1
 
     steps:
       - checkout
+      - gcp-gcr/gcr-auth
 
-      - gcp-gcr/build-and-push-image:
-          context: .
+      - gcp-gcr/build-image:
+          image: orb-test
+          no_output_timeout: 20m
+          registry-url: $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY
+
+      - gcp-gcr/push-image:
+          digest-path: /tmp/digest.txt
           image: $IMAGE_NAME:$IMAGE_TAG
           registry-url: $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY
-          setup-remote-docker: true
-          use-docker-layer-caching: true
+
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
+
+      # - gcp-gcr/continuous-delivery:
+      #     context: .
+      #     image: $IMAGE_NAME:$IMAGE_TAG
+      #     registry-url: $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY
+      #     setup-remote-docker: true
+      #     use-docker-layer-caching: true
 
       # - setup_remote_docker: 
       #     version: 20.10.14
