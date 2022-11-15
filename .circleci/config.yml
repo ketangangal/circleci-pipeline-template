@@ -1,4 +1,3 @@
-# CircleCI configuration file
 version: 2.1
 
 orbs:
@@ -24,18 +23,12 @@ jobs:
     docker:
       - image: cimg/base:stable
     resource_class: medium
-
-    environment:
-        REPOSITORY: finance-complaint
-        IMAGE_NAME: finance-complaint
-        IMAGE_TAG: latest
-        PROJECT_ID: industry-ready-finance
-        GAR_LOCATION: asia-south1
-
     steps:
       - checkout
+
       - gcp-cli/install_and_initialize_cli:
-          gcloud-service-key: ${GCLOUD_SERVICE_KEY}
+          context: myContext
+          gcloud-service-key: GCLOUD_SERVICE_KEY
 
 
 
@@ -59,7 +52,7 @@ jobs:
 
   
 workflows:
-  build-workflow:
+  CICD:
     jobs:
       - continuous-integration
 
