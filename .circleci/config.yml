@@ -2,8 +2,7 @@
 version: 2.1
 
 orbs:
-  gcp-gcr: circleci/gcp-gcr@0.15.0
-
+  gcp-cli: circleci/gcp-cli@1.0.0
 
 jobs:
   continuous-integration:
@@ -20,9 +19,11 @@ jobs:
       - run: 
           name: Run unit tests
           command: echo "Running unit tests"
-
+  
   continuous-delivery:
-    executor: gcp-gcr/default
+    docker:
+      - image: cimg/base:stable
+    resource_class: medium
 
     environment:
         REPOSITORY: finance-complaint
@@ -33,21 +34,9 @@ jobs:
 
     steps:
       - checkout
-      - gcp-gcr/gcr-auth
+      - gcp-cli/install_and_initialize_cli:
+          gcloud-service-key: $GCLOUD_SERVICE_KEY
 
-      - gcp-gcr/build-image:
-          image: orb-test
-          no_output_timeout: 20m
-          registry-url: $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY
-
-      - gcp-gcr/push-image:
-          digest-path: /tmp/digest.txt
-          image: $IMAGE_NAME:$IMAGE_TAG
-          registry-url: $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY
-
-      - run:
-          command: |
-            echo "Digest is: $(</tmp/digest.txt)"
 
       # - gcp-gcr/continuous-delivery:
       #     context: .
