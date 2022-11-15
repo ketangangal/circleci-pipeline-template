@@ -12,11 +12,11 @@ jobs:
       - checkout
 
       - run: 
-          name: Lint code
+          name: lint code
           command: echo "Linting repository"
 
       - run: 
-          name: Run unit tests
+          name: run unit tests
           command: echo "Running unit tests"
   
   continuous-delivery:
@@ -30,7 +30,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Google Cloud Authentication
+          name: google cloud authentication
           command: |
             echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
@@ -41,12 +41,12 @@ jobs:
           docker_layer_caching: true
 
       - run:
-          name: Docker Build and tag
+          name: build and tag
           command: docker build -t $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
       
       - run:
-          name: Docker Build and tag
-          command: docker push $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
+          name: push to private repository
+          command: docker push $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG 
 
 
   continuous-deployment:
