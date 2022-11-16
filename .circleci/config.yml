@@ -76,13 +76,13 @@ jobs:
       - run:
           name: Remove Already Running Container
           command: |
-            docker ps -q --filter "name=$GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG " | grep -q . \
+            docker ps -q --filter "name=${IMAGE_NAME}" | grep -q . \
               && docker stop $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG \
                && docker rm -fv sensor || true
 
       - run:
           name: pull image from private repository
-          command: docker run -d -p 80:8080 ${GOOGLE_COMPUTE_ZONE}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG 
+          command: docker run --name=${IMAGE_NAME} -d -p 80:8080 ${GOOGLE_COMPUTE_ZONE}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG 
   
 workflows:
   CICD:
