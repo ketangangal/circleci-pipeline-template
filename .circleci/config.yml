@@ -75,7 +75,11 @@ jobs:
 
       - run:
           name: Remove Already Running Container
-          command: docker ps -q --filter "name=${IMAGE_NAME}" | grep -q . docker stop "name=${IMAGE_NAME}" docker rm -fv "name=${IMAGE_NAME}" || true
+          command: docker ps -q --filter "name=${IMAGE_NAME}" | grep -q . && docker stop ${IMAGE_NAME} && docker rm -fv ${IMAGE_NAME} || true
+
+      - run:
+          name: free up system space
+          command: docker system prune -f
 
       - run:
           name: pull image from private repository
