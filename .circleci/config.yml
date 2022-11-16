@@ -57,7 +57,8 @@ jobs:
       - run:
           name: google cloud authentication
           command: |
-            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            echo $GCLOUD_SERVICE_KEY > /tmp/credentials.json
+            gcloud auth activate-service-account --key-file=/tmp/credentials.json
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
             gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
 
@@ -67,10 +68,10 @@ jobs:
 
       - run:
           name: pull image from private repository
-          command: docker pull $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG 
+          command: docker pull $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/$GOOGLE_PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG 
 
       - run:
-          name: pull image from private repository
+          name: Remove Already Running Container
           command: |
             docker ps -q --filter "name=$GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG " | grep -q . \
               && docker stop $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG \
