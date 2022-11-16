@@ -82,7 +82,7 @@ jobs:
           command: docker system prune -f
 
       - run:
-          name: pull image from private repository
+          name: start container
           command: docker run --name=${IMAGE_NAME} -d -p 80:8080 ${GOOGLE_COMPUTE_ZONE}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG 
   
 workflows:

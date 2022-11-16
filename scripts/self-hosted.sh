@@ -6,7 +6,6 @@ export platform=linux/amd64 && sh ./download-launch-agent.sh
 
 # Create the circleci user & working directory
 id -u circleci &>/dev/null || sudo adduser --disabled-password --gecos GECOS circleci
-
 sudo mkdir -p /var/opt/circleci
 sudo chmod 0750 /var/opt/circleci
 sudo chown -R circleci /var/opt/circleci /opt/circleci/circleci-launch-agent
@@ -30,18 +29,20 @@ sudo chmod 600 /etc/opt/circleci/launch-agent-config.yaml
 # Enable the systemd unit
 sudo touch /usr/lib/systemd/system/circleci.service
 sudo nano /usr/lib/systemd/system/circleci.service
-Put Content in the circleci.service
-# [Unit]
-# Description=CircleCI Runner
-# After=network.target
-# [Service]
-# ExecStart=/opt/circleci/circleci-launch-agent --config /etc/opt/circleci/launch-agent-config.yaml
-# Restart=always
-# User=circleci
-# NotifyAccess=exec
-# TimeoutStopSec=18300
-# [Install]
-# WantedBy = multi-user.target
+
+#Put Content in the circleci.service
+    # [Unit]
+    # Description=CircleCI Runner
+    # After=network.target
+    # [Service]
+    # ExecStart=/opt/circleci/circleci-launch-agent --config /etc/opt/circleci/launch-agent-config.yaml
+    # Restart=always
+    # User=circleci
+    # NotifyAccess=exec
+    # TimeoutStopSec=18300
+    # [Install]
+    # WantedBy = multi-user.target
+    
 sudo chown root: /usr/lib/systemd/system/circleci.service
 sudo chmod 644 /usr/lib/systemd/system/circleci.service
 
