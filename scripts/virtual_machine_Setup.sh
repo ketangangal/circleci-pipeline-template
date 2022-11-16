@@ -8,11 +8,21 @@ sudo apt update
 apt-cache policy docker-ce
 sudo apt install docker-ce -y
 sudo systemctl status docker
+
+# Add cloud user to docker group
 sudo usermod -aG docker cloud
+newgrp docker
+
+# Start configuration of self-hosted machine
+
+## Add circleci to sudo group
+sudo usermod -aG docker circleci
 newgrp docker
 
 # Setup Google Cloud
 curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-409.0.0-linux-x86_64.tar.gz
 tar -xf google-cloud-cli-409.0.0-linux-x86_64.tar.gz
 ./google-cloud-sdk/install.sh --path-update true
-gcloud init
+
+# gcloud init
+

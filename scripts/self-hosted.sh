@@ -14,7 +14,7 @@ sudo chown -R circleci /var/opt/circleci /opt/circleci/circleci-launch-agent
 # Create a CircleCI runner configuration
 sudo mkdir -p /etc/opt/circleci
 sudo touch /etc/opt/circleci/launch-agent-config.yaml
-
+sudo nano /etc/opt/circleci/launch-agent-config.yaml
 # Add API in the file and change permissions
     # api:
     #   auth_token: AUTH_TOKEN
@@ -29,18 +29,19 @@ sudo chmod 600 /etc/opt/circleci/launch-agent-config.yaml
 
 # Enable the systemd unit
 sudo touch /usr/lib/systemd/system/circleci.service
-    # Put Content in the circleci.service
-    # [Unit]
-    # Description=CircleCI Runner
-    # After=network.target
-    # [Service]
-    # ExecStart=/opt/circleci/circleci-launch-agent --config /etc/opt/circleci/launch-agent-config.yaml
-    # Restart=always
-    # User=circleci
-    # NotifyAccess=exec
-    # TimeoutStopSec=18300
-    # [Install]
-    # WantedBy = multi-user.target
+sudo nano /usr/lib/systemd/system/circleci.service
+Put Content in the circleci.service
+# [Unit]
+# Description=CircleCI Runner
+# After=network.target
+# [Service]
+# ExecStart=/opt/circleci/circleci-launch-agent --config /etc/opt/circleci/launch-agent-config.yaml
+# Restart=always
+# User=circleci
+# NotifyAccess=exec
+# TimeoutStopSec=18300
+# [Install]
+# WantedBy = multi-user.target
 sudo chown root: /usr/lib/systemd/system/circleci.service
 sudo chmod 644 /usr/lib/systemd/system/circleci.service
 
