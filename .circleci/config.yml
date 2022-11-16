@@ -75,10 +75,7 @@ jobs:
 
       - run:
           name: Remove Already Running Container
-          command: |
-            docker ps -q --filter "name=${IMAGE_NAME}" | grep -q . \
-              && docker stop $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG \
-               && docker rm -fv "name=${IMAGE_NAME}" || true
+          command: docker ps -q --filter "name=${IMAGE_NAME}" | grep -q . docker stop "name=${IMAGE_NAME}" docker rm -fv "name=${IMAGE_NAME}" || true
 
       - run:
           name: pull image from private repository
