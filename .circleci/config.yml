@@ -53,6 +53,10 @@ jobs:
   continuous-deployment:
     machine: true
     resource_class: ketangangal/self-hosted
+    environment:
+      REPOSITORY: finance-complaint
+      IMAGE_NAME: finance-complaint
+      IMAGE_TAG: latest
     steps:
       - run:
           name: google cloud authentication
@@ -68,7 +72,7 @@ jobs:
 
       - run:
           name: pull image from private repository
-          command: docker pull $GOOGLE_COMPUTE_ZONE-docker.pkg.dev/$GOOGLE_PROJECT_ID/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG 
+          command: docker pull ${GOOGLE_COMPUTE_ZONE}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG 
 
       - run:
           name: Remove Already Running Container
