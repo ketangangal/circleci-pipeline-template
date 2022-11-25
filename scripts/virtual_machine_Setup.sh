@@ -9,6 +9,9 @@ apt-cache policy docker-ce
 sudo apt install docker-ce -y
 sudo systemctl status docker
 
+# To install docker compose
+sudo apt install docker-compose
+
 # Add cloud user to docker group
 sudo usermod -aG docker cloud
 newgrp docker
